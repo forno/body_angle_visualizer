@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>body_angle_visualizer</name>
+  <version>0.1.0</version>
+  <description>The body_angle_visualizer package</description>
+
+  <maintainer email="o111027y@mail.kyutech.jp">Doi Yusuke</maintainer>
+  <license>BDS</license>
+
+  <url type="website">http://github.com/forno/body_angle_visualizer</url>
+
+  <author email="o111027y@mail.kyutech.jp">Doi Yusuke</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>tf2</depend>
+</package>
