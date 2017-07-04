@@ -6,11 +6,14 @@ add_compile_options(-std=c++11)
 set(DEPEND_PACKAGES
   roscpp
   tf2
+  rviz_visual_tools
 )
 
 find_package(catkin REQUIRED COMPONENTS
   ${DEPEND_PACKAGES}
 )
+
+find_package(Eigen3 REQUIRED)
 
 ###################################
 ## catkin specific configuration ##
@@ -26,6 +29,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${Eigen_INCLUDE_DIRS}
 )
 
 add_executable(${PROJECT_NAME}_node src/body_angle_visualizer_node.cpp)
