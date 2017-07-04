@@ -22,3 +22,14 @@ This software require some tf frames.
 - /head
 
 There is a possibility that the increase.
+
+## Usage
+
+```bash
+roscore # first turminal
+rosrun openni_tracker openni_tracker # second turminal
+rosrun body_angle_visualizer body_angle_visualizer # third turminal
+rviz # foruth turminal
+```
+
+(Maybe) you see the visualize angle
