@@ -24,9 +24,7 @@ int main(int argc, char** argv)
       const auto stand_quaternion {Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitX(), stand_vec)};
 
       rvt.deleteAllMarkers();
-
-      Eigen::Affine3d arrow {stand_quaternion};
-      rvt.publishArrow(arrow);
+      rvt.publishArrow(Eigen::Affine3d{stand_quaternion});
 
       rvt.trigger();
     } catch (tf2::TransformException &e) {
