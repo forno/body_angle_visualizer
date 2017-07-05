@@ -1,7 +1,6 @@
 #include <cmath>
 
 #include <ros/ros.h>
-#include <geometry_msgs/TransformStamped.h>
 #include <rviz_visual_tools/rviz_visual_tools.h>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_ros/transform_listener.h>
@@ -18,17 +17,21 @@ int main(int argc, char** argv)
   rviz_visual_tools::RvizVisualTools rvt {"openni_depth_frame", "rviz_visual_markers"};
 
   while (ros::ok()) {
-    auto head_pos {tf2::transformToEigen(tfBuffer.lookupTransform("openni_depth_frame", "head", ros::Time {0}))};
-    auto torso_pos {tf2::transformToEigen(tfBuffer.lookupTransform("openni_depth_frame", "torso", ros::Time {0}))};
-    const auto stand_vec {head_pos.translation() - torso_pos.translation()};
+    try {
+      const auto head_pos {tf2::transformToEigen(tfBuffer.lookupTransform("openni_depth_frame", "head_1", ros::Time {0}))};
+      const auto torso_pos {tf2::transformToEigen(tfBuffer.lookupTransform("openni_depth_frame", "torso_1", ros::Time {0}))};
+      const auto stand_vec {head_pos.translation() - torso_pos.translation()};
+      const auto stand_quaternion {Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitX(), stand_vec)};
 
-    Eigen::Affine3d arrow {};
-    arrow.translation() = stand_vec;
+      rvt.deleteAllMarkers();
 
-    rvt.deleteAllMarkers();
-    rvt.publishArrow(arrow);
+      Eigen::Affine3d arrow {stand_quaternion};
+      rvt.publishArrow(arrow);
 
-    rvt.trigger();
+      rvt.trigger();
+    } catch (tf2::TransformException &e) {
+      ROS_WARN("%s", e.what());
+    }
 
     r.sleep();
   }
