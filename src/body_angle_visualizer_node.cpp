@@ -1,6 +1,7 @@
 #include <cmath>
 
 #include <ros/ros.h>
+#include <geometry_msgs/Quaternion.h>
 #include <rviz_visual_tools/rviz_visual_tools.h>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_ros/transform_listener.h>
@@ -11,6 +12,7 @@ int main(int argc, char** argv)
 {
   ros::init(argc, argv, "body_angle_visualizer");
   ros::NodeHandle n {};
+  ros::Publisher pub {n.advertise<geometry_msgs::Quaternion>("body_direction", 1)};
   ros::Rate r {5};
   tf2_ros::Buffer tfBuffer {};
   tf2_ros::TransformListener tfListener {tfBuffer};
@@ -25,6 +27,7 @@ int main(int argc, char** argv)
 
       rvt.deleteAllMarkers();
       rvt.publishArrow(Eigen::Affine3d{stand_quaternion});
+      pub.publish(tf2::toMsg(stand_quaternion));
 
       rvt.trigger();
     } catch (tf2::TransformException &e) {
