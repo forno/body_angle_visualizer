@@ -1,4 +1,5 @@
 #include <cmath>
+#include <string>
 
 #include <ros/ros.h>
 #include <geometry_msgs/Quaternion.h>
@@ -25,9 +26,14 @@ int main(int argc, char** argv)
       const auto stand_vec {head_pos.translation() - torso_pos.translation()};
       const auto stand_quaternion {Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitX(), stand_vec)};
 
+      pub.publish(tf2::toMsg(stand_quaternion));
       rvt.deleteAllMarkers();
       rvt.publishArrow(Eigen::Affine3d{stand_quaternion});
-      pub.publish(tf2::toMsg(stand_quaternion));
+
+      const auto stand_euler_rpy {stand_quaternion.toRotationMatrix().eulerAngles(0, 1, 2)};
+      Eigen::Affine3d text_pos {};
+      text_pos.translation() = Eigen::Vector3d::UnitZ();
+      rvt.publishText(text_pos, std::to_string(stand_euler_rpy(0)));
 
       rvt.trigger();
     } catch (tf2::TransformException &e) {
