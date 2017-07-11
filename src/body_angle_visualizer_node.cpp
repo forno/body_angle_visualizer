@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 
       Eigen::Affine3d text_pos {};
       text_pos.translation() = stand_vec;
-      rvt.publishText(text_pos, std::to_string(stand_vec.normalized()(1)));
+      rvt.publishText(text_pos, std::to_string(stand_vec.normalized()(1)), rviz_visual_tools::WHITE, rviz_visual_tools::XLARGE);
 
       rvt.trigger();
     } catch (tf2::TransformException &e) {
