@@ -38,7 +38,7 @@ int main(int argc, char** argv)
       pub.publish(tf2::toMsg(stand_vec));
 
       rvt.deleteAllMarkers();
-      rvt.publishArrow(Eigen::Affine3d{stand_quaternion});
+      rvt.publishArrow(Eigen::Affine3d{stand_quaternion}, rviz_visual_tools::BLUE, rviz_visual_tools::LARGE);
 
       Eigen::Affine3d text_pos {};
       text_pos.translation() = stand_vec;
