@@ -16,7 +16,7 @@ int main(int argc, char** argv)
   ros::NodeHandle n {};
 
   int target_number {1};
-  std::string root_name {"openni_depth_frame"};
+  std::string root_name {"openni_coordinater"};
   {
     ros::NodeHandle pn {"~"};
     pn.getParam("target_number", target_number);
