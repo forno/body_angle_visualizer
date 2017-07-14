@@ -1,6 +1,6 @@
 <launch>
   <node name="tracker" pkg="openni_tracker" type="openni_tracker" />
-  <node name="coordinater" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 1.57079632679 0 1.57079632679 openni_depth_frame openni_coordinater" />
+  <node name="coordinater" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 -1.57079632679 0 1.57079632679 openni_depth_frame openni_coordinater" />
 
   <node name="visualizer" pkg="body_angle_visualizer" type="body_angle_visualizer_node">
     <param name="root" value="openni_coordinater" />
