@@ -38,7 +38,7 @@ int main(int argc, char** argv)
       const auto torso_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, torso_name, ros::Time{0}))};
       const auto torso_ypr {torso_pos.rotation().eulerAngles(1, 0, 2)};
       const auto trim_half_rotation {[](double angle){
-        const auto pi {std::acos(-1)};
+        constexpr auto pi {3.141592653589793};
         if (angle < -pi / 2)
           return angle += pi;
         if (angle > pi / 2)
