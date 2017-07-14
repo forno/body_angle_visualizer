@@ -24,14 +24,18 @@ int main(int argc, char** argv)
 
   int target_number {1};
   std::string root_name {"openni_coordinater"};
+  std::string to_name {"head"};
+  std::string from_name {"torso"};
   {
     ros::NodeHandle pn {"~"};
     pn.getParam("target_number", target_number);
     pn.getParam("root", root_name);
+    pn.getParam("to", to_name);
+    pn.getParam("from", from_name);
   }
 
-  const auto head_name {"head_" + std::to_string(target_number)};
-  const auto torso_name {"torso_" + std::to_string(target_number)};
+  const auto head_name {to_name + '_' + std::to_string(target_number)};
+  const auto torso_name {from_name + '_' + std::to_string(target_number)};
 
   ros::Publisher pub {n.advertise<geometry_msgs::Point>("body_direction", 1)};
   ros::Rate r {5};
