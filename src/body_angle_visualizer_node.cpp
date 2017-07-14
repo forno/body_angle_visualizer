@@ -21,15 +21,17 @@ int main(int argc, char** argv)
 
   ros::NodeHandle pn {"~"};
   int target_number {0};
-  pn.param("target_number", target_number);
+  pn.getParam("target_number", target_number);
+  std::string root_name {"openni_depth_frame"};
+  pn.getParam("root", root_name);
 
   const auto head_name {"head_" + std::to_string(target_number)};
   const auto torso_name {"torso_" + std::to_string(target_number)};
 
   while (ros::ok()) {
     try {
-      const auto head_pos {tf2::transformToEigen(tfBuffer.lookupTransform("openni_depth_frame", head_name, ros::Time{0}))};
-      const auto torso_pos {tf2::transformToEigen(tfBuffer.lookupTransform("openni_depth_frame", torso_name, ros::Time{0}))};
+      const auto head_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, head_name, ros::Time{0}))};
+      const auto torso_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, torso_name, ros::Time{0}))};
       const auto stand_vec {head_pos.translation() - torso_pos.translation()};
       const auto stand_quaternion {Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitX(), stand_vec)};
 
