@@ -10,6 +10,13 @@
 #include <Eigen/Geometry>
 #include <Eigen/SVD>
 
+namespace
+{
+
+constexpr auto pi {3.141592653589793};
+
+}
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "body_angle_visualizer");
@@ -37,8 +44,7 @@ int main(int argc, char** argv)
       const auto head_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, head_name, ros::Time{0}))};
       const auto torso_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, torso_name, ros::Time{0}))};
       const auto torso_ypr {torso_pos.rotation().eulerAngles(1, 0, 2)};
-      const auto trim_half_rotation {[](double angle){
-        constexpr auto pi {3.141592653589793};
+      const auto trim_half_rotation {[](double angle) {
         if (angle < -pi / 2)
           return angle += pi;
         if (angle > pi / 2)
@@ -56,7 +62,7 @@ int main(int argc, char** argv)
 
       Eigen::Affine3d text_pos {};
       text_pos.translation() = stand_vec;
-      rvt.publishText(text_pos, std::to_string(roll_angle), rviz_visual_tools::WHITE, rviz_visual_tools::XLARGE);
+      rvt.publishText(text_pos, std::to_string(roll_angle * 180 / pi), rviz_visual_tools::WHITE, rviz_visual_tools::XLARGE);
 
       rvt.trigger();
     } catch (tf2::TransformException &e) {
