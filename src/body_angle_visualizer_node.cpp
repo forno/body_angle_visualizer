@@ -20,7 +20,7 @@ int main(int argc, char** argv)
   rviz_visual_tools::RvizVisualTools rvt {"openni_depth_frame", "rviz_visual_markers"};
 
   ros::NodeHandle pn {"~"};
-  int target_number {0};
+  int target_number {1};
   pn.getParam("target_number", target_number);
   std::string root_name {"openni_depth_frame"};
   pn.getParam("root", root_name);
