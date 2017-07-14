@@ -36,7 +36,7 @@ int main(int argc, char** argv)
     try {
       const auto head_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, head_name, ros::Time{0}))};
       const auto torso_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, torso_name, ros::Time{0}))};
-      const auto torso_yrp {torso_pos.rotation().eulerAngles(1, 2, 0)};
+      const auto torso_ypr {torso_pos.rotation().eulerAngles(1, 0, 2)};
       const auto stand_vec {head_pos.translation() - torso_pos.translation()};
       const auto stand_quaternion {Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitX(), stand_vec)};
 
@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 
       Eigen::Affine3d text_pos {};
       text_pos.translation() = stand_vec;
-      rvt.publishText(text_pos, std::to_string(torso_yrp(1)), rviz_visual_tools::WHITE, rviz_visual_tools::XLARGE);
+      rvt.publishText(text_pos, std::to_string(torso_yrp(2)), rviz_visual_tools::WHITE, rviz_visual_tools::XLARGE);
 
       rvt.trigger();
     } catch (tf2::TransformException &e) {
