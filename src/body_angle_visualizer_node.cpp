@@ -34,8 +34,8 @@ int main(int argc, char** argv)
     pn.getParam("from", from_name);
   }
 
-  const auto head_name {to_name + '_' + std::to_string(target_number)};
-  const auto torso_name {from_name + '_' + std::to_string(target_number)};
+  const auto to_frame_name {to_name + '_' + std::to_string(target_number)};
+  const auto from_frame_name {from_name + '_' + std::to_string(target_number)};
 
   ros::Publisher pub {n.advertise<geometry_msgs::Quaternion>("body_direction", 1)};
   ros::Rate r {5};
@@ -45,9 +45,9 @@ int main(int argc, char** argv)
 
   while (ros::ok()) {
     try {
-      const auto head_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, head_name, ros::Time{0}))};
-      const auto torso_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, torso_name, ros::Time{0}))};
-      const auto torso_ypr {torso_pos.rotation().eulerAngles(1, 0, 2)};
+      const auto to_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, to_frame_name, ros::Time{0}))};
+      const auto from_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, from_frame_name, ros::Time{0}))};
+      const auto from_ypr {from_pos.rotation().eulerAngles(1, 0, 2)};
       const auto trim_half_rotation {[](double angle) {
         if (angle < -pi / 2)
           return angle += pi;
@@ -55,11 +55,11 @@ int main(int argc, char** argv)
           return angle -= pi;
         return angle;
       }};
-      const auto roll_angle {trim_half_rotation(torso_ypr(2))};
-      const auto stand_vec {head_pos.translation() - torso_pos.translation()};
+      const auto roll_angle {trim_half_rotation(from_ypr(2))};
+      const auto stand_vec {to_pos.translation() - from_pos.translation()};
       const auto stand_quaternion {Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitX(), stand_vec)};
 
-      pub.publish(tf2::toMsg(Eigen::Quaterniond{torso_pos.rotation()}));
+      pub.publish(tf2::toMsg(Eigen::Quaterniond{from_pos.rotation()}));
 
       rvt.deleteAllMarkers();
       rvt.publishArrow(Eigen::Affine3d{stand_quaternion}, rviz_visual_tools::BLUE, rviz_visual_tools::LARGE);
