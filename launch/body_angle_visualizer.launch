@@ -5,4 +5,8 @@
   <node name="visualizer" pkg="body_angle_visualizer" type="body_angle_visualizer_node">
     <param name="root" value="openni_coordinater" />
   </node>
+  <node name="left_foot_publisher" pkg="body_angle_visualizer" type="relational_position_publisher">
+    <remap from="torso_1_direction" to="torso2lfoot" />
+    <param name="root" value="openni_coordinater" />
+  </node>
 </launch>
