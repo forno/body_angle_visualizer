@@ -2,7 +2,7 @@
 #include <string>
 
 #include <ros/ros.h>
-#include <geometry_msgs/Point.h>
+#include <geometry_msgs/Quaternion.h>
 #include <rviz_visual_tools/rviz_visual_tools.h>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_ros/transform_listener.h>
@@ -37,7 +37,7 @@ int main(int argc, char** argv)
   const auto head_name {to_name + '_' + std::to_string(target_number)};
   const auto torso_name {from_name + '_' + std::to_string(target_number)};
 
-  ros::Publisher pub {n.advertise<geometry_msgs::Point>("body_direction", 1)};
+  ros::Publisher pub {n.advertise<geometry_msgs::Quaternion>("body_direction", 1)};
   ros::Rate r {5};
   tf2_ros::Buffer tfBuffer {};
   tf2_ros::TransformListener tfListener {tfBuffer};
@@ -59,7 +59,7 @@ int main(int argc, char** argv)
       const auto stand_vec {head_pos.translation() - torso_pos.translation()};
       const auto stand_quaternion {Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitX(), stand_vec)};
 
-      pub.publish(tf2::toMsg(stand_vec));
+      pub.publish(tf2::toMsg(Eigen::Quaterniond{torso_pos.rotation()}));
 
       rvt.deleteAllMarkers();
       rvt.publishArrow(Eigen::Affine3d{stand_quaternion}, rviz_visual_tools::BLUE, rviz_visual_tools::LARGE);
