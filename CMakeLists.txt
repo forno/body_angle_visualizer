@@ -40,6 +40,11 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
 )
+add_executable(relational_position_publisher src/relational_position_publisher.cpp)
+add_dependencies(relational_position_publisher ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(relational_position_publisher
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
