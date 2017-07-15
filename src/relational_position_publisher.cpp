@@ -28,7 +28,7 @@ int main(int argc, char** argv)
   const auto to_frame_name {to_name + '_' + std::to_string(target_number)};
   const auto from_frame_name {from_name + '_' + std::to_string(target_number)};
 
-  ros::Publisher pub {n.advertise<geometry_msgs::Point>(from_frame_name + "_direction", 1)};
+  ros::Publisher pub {n.advertise<geometry_msgs::Point>(to_frame_name + "_direction", 1)};
   ros::Rate r {5};
   tf2_ros::Buffer tfBuffer {};
   tf2_ros::TransformListener tfListener {tfBuffer};
