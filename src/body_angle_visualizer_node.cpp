@@ -47,7 +47,7 @@ int main(int argc, char** argv)
       const auto to_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, to_frame_name, ros::Time{0}))};
       const auto from_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, from_frame_name, ros::Time{0}))};
       const auto from_ypr {from_pos.rotation().eulerAngles(1, 0, 2)};
-      const auto trim_half_rotation {[](double angle) {
+      constexpr auto trim_half_rotation {[](double angle) {
         if (angle < -pi / 2)
           return angle + pi;
         if (angle > pi / 2)
@@ -55,7 +55,7 @@ int main(int argc, char** argv)
         return angle;
       }};
       const auto roll_angle {trim_half_rotation(from_ypr(2))};
-      const auto invert_half_rotation {[](double angle) {
+      constexpr auto invert_half_rotation {[](double angle) {
         if (angle < -pi / 2)
           return -angle - pi;
         if (angle > pi / 2)
