@@ -1,9 +1,10 @@
 <launch>
   <node name="tracker" pkg="openni_tracker" type="openni_tracker" />
   <node name="coordinater" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 -1.57079632679 0 1.57079632679 openni_depth_frame openni_coordinater" />
-
-  <node name="visualizer" pkg="body_angle_visualizer" type="body_angle_visualizer_node" />
-  <node name="left_foot_publisher" pkg="body_angle_visualizer" type="relational_position_publisher">
-    <remap from="torso_1_direction" to="torso2lfoot" />
-  </node>
+  <group ns="target_1">
+    <node name="visualizer" pkg="body_angle_visualizer" type="body_angle_visualizer_node" />
+    <node name="left_foot_publisher" pkg="body_angle_visualizer" type="relational_position_publisher">
+      <remap from="torso_1_direction" to="torso2lfoot" />
+    </node>
+  </group>
 </launch>
