@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 
   int target_number {1};
   std::string root_name {"openni_coordinater"};
-  std::string to_name {"head"};
+  std::string to_name {"left_foot"};
   std::string from_name {"torso"};
   {
     ros::NodeHandle pn {"~"};
