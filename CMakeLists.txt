@@ -45,6 +45,11 @@ add_dependencies(relational_position_publisher ${${PROJECT_NAME}_EXPORTED_TARGET
 target_link_libraries(relational_position_publisher
   ${catkin_LIBRARIES}
 )
+add_executable(sentry_frame src/sentry_frame.cpp)
+add_dependencies(sentry_frame ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(sentry_frame
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
