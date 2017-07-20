@@ -43,8 +43,9 @@ int main(int argc, char** argv)
   ts.child_frame_id = "sentry_frame_" + std::to_string(target_number);
   while (ros::ok()) {
     try {
-      const auto body_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, body_frame_name, ros::Time{0}))};
-      const auto body_ypr {body_pos.rotation().eulerAngles(1, 0, 2)};
+      auto body_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, body_frame_name, ros::Time{0}))};
+      body_pos.translation() = Eigen::Vector3d::Zero();
+      const auto body_ypr {body_pos.linear().eulerAngles(1, 0, 2)};
       constexpr auto trim_half_rotation {[](double angle) {
         if (angle < -pi / 2)
           return angle + pi;
@@ -52,10 +53,11 @@ int main(int argc, char** argv)
           return angle - pi;
         return angle;
       }};
-      const auto yaw_angle {trim_half_rotation(body_ypr(0))};
+      const auto yaw_angle {(body_ypr(0))};
 
       ts.header.stamp = ros::Time::now();
-      ts.transform.rotation = tf2::toMsg(Eigen::Quaterniond{Eigen::AngleAxisd{yaw_angle, Eigen::Vector3d::UnitY()}});
+      //ts.transform.rotation = tf2::toMsg(Eigen::Quaterniond{Eigen::AngleAxisd{yaw_angle, Eigen::Vector3d::UnitY()}});
+      ts.transform.rotation = tf2::toMsg(Eigen::Quaterniond{body_pos.rotation()});
 
       br.sendTransform(ts);
     } catch (tf2::TransformException &e) {

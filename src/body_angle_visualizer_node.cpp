@@ -46,7 +46,9 @@ int main(int argc, char** argv)
     try {
       const auto to_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, to_frame_name, ros::Time{0}))};
       const auto from_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, from_frame_name, ros::Time{0}))};
-      const auto from_ypr {from_pos.rotation().eulerAngles(1, 0, 2)};
+      auto copy {from_pos};
+      copy.translation() = Eigen::Vector3d::Zero();
+      const auto from_ypr {copy.linear().eulerAngles(1, 0, 2)};
       constexpr auto trim_half_rotation {[](double angle) {
         if (angle < -pi / 2)
           return angle + pi;
@@ -63,8 +65,11 @@ int main(int argc, char** argv)
         return angle;
       }};
       const auto pitch_angle {invert_half_rotation(from_ypr(1))};
-      const auto stand_vec {to_pos.translation() - from_pos.translation()};
-      const auto stand_quaternion {Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitX(), stand_vec)};
+      //const auto stand_vec {to_pos.translation() - from_pos.translation()};
+      //const auto stand_vec {from_pos * Eigen::Vector3d::UnitX()};
+      const auto stand_vec {copy * Eigen::Vector3d::UnitY()};
+      //const auto stand_quaternion {Eigen::Quaterniond::FromTwoVectors(Eigen::Vector3d::UnitX(), stand_vec)};
+      const auto stand_quaternion {copy.rotation()};
 
       pub.publish(tf2::toMsg(Eigen::Quaterniond{from_pos.rotation()}));
 
