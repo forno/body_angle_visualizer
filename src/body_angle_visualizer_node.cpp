@@ -40,7 +40,7 @@ int main(int argc, char** argv)
   ros::Rate r {5};
   tf2_ros::Buffer tfBuffer {};
   tf2_ros::TransformListener tfListener {tfBuffer};
-  rviz_visual_tools::RvizVisualTools rvt {root_name, "rviz_visual_markers"};
+  rviz_visual_tools::RvizVisualTools rvt {"sentry_frame_1", "rviz_visual_markers"};
 
   while (ros::ok()) {
     try {
