@@ -40,7 +40,7 @@ int main(int argc, char** argv)
   ros::Rate r {5};
   tf2_ros::Buffer tfBuffer {};
   tf2_ros::TransformListener tfListener {tfBuffer};
-  rviz_visual_tools::RvizVisualTools rvt {"sentry_frame_1", "rviz_visual_markers"};
+  rviz_visual_tools::RvizVisualTools rvt {root_name, "rviz_visual_markers"};
 
   while (ros::ok()) {
     try {
@@ -48,7 +48,8 @@ int main(int argc, char** argv)
       const auto from_pos {tf2::transformToEigen(tfBuffer.lookupTransform(root_name, from_frame_name, ros::Time{0}))};
       auto copy {from_pos};
       copy.translation() = Eigen::Vector3d::Zero();
-      const auto from_ypr {copy.linear().eulerAngles(1, 0, 2)};
+      const auto from_ypr {copy.rotation().eulerAngles(2, 0, 1)};
+      ROS_INFO("yaw pitch roll : %f %f %f", from_ypr(2), from_ypr(1), from_ypr(0));
       constexpr auto trim_half_rotation {[](double angle) {
         if (angle < -pi / 2)
           return angle + pi;
@@ -56,7 +57,7 @@ int main(int argc, char** argv)
           return angle - pi;
         return angle;
       }};
-      const auto roll_angle {trim_half_rotation(from_ypr(2))};
+      const auto roll_angle {trim_half_rotation(from_ypr(0))};
       constexpr auto invert_half_rotation {[](double angle) {
         if (angle < -pi / 2)
           return -angle - pi;

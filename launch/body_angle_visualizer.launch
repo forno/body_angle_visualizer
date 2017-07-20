@@ -4,7 +4,7 @@
 
   <group ns="target_1">
     <node name="sentry" pkg="body_angle_visualizer" type="sentry_frame" />
-    <node name="visualizer" pkg="body_angle_visualizer" type="body_angle_visualizer_node" />
+    <node name="visualizer" pkg="body_angle_visualizer" type="body_angle_visualizer_node" output="screen" />
     <node name="left_foot_publisher" pkg="body_angle_visualizer" type="relational_position_publisher">
       <remap from="torso_1_direction" to="torso2lfoot" />
       <param name="root" value="sentry_frame_1" />
